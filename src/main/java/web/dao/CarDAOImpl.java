@@ -12,7 +12,29 @@ public class CarDAOImpl implements CarDAO {
 
     public CarDAOImpl() {
         this.cars = new ArrayList<>();
-        initializeCars();
+    }
+
+    @Override
+    public List<Car> getAllCars() {
+        if (cars.isEmpty()) {
+            initializeCars();
+        }
+        return Collections.unmodifiableList(cars);
+    }
+
+    @Override
+    public List<Car> getCars(int count) {
+        if (count <= 0) {
+            return Collections.emptyList();
+        }
+
+        if (cars.isEmpty()) {
+            initializeCars();
+        }
+
+        return Collections.unmodifiableList(
+                cars.subList(0, Math.min(count, cars.size()))
+        );
     }
 
     private void initializeCars() {
@@ -21,20 +43,5 @@ public class CarDAOImpl implements CarDAO {
         cars.add(new Car("Model3", 2023));
         cars.add(new Car("Model4", 2024));
         cars.add(new Car("Model5", 2020));
-    }
-
-    @Override
-    public List<Car> getAllCars() {
-        return Collections.unmodifiableList(cars); // Защищаем от изменений
-    }
-
-    @Override
-    public List<Car> getCars(int count) {
-        if (count <= 0) {
-            return Collections.emptyList(); // Возвращаем неизменяемый пустой список
-        }
-        return Collections.unmodifiableList(
-                cars.subList(0, Math.min(count, cars.size()))
-        );
     }
 }
