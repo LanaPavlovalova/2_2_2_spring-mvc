@@ -3,6 +3,7 @@ package web.dao;
 import org.springframework.stereotype.Repository;
 import web.model.Car;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -24,14 +25,16 @@ public class CarDAOImpl implements CarDAO {
 
     @Override
     public List<Car> getAllCars() {
-        return new ArrayList<>(cars);
+        return Collections.unmodifiableList(cars); // Защищаем от изменений
     }
 
     @Override
     public List<Car> getCars(int count) {
         if (count <= 0) {
-            return new ArrayList<>();
+            return Collections.emptyList(); // Возвращаем неизменяемый пустой список
         }
-        return new ArrayList<>(cars.subList(0, Math.min(count, cars.size())));
+        return Collections.unmodifiableList(
+                cars.subList(0, Math.min(count, cars.size()))
+        );
     }
 }
